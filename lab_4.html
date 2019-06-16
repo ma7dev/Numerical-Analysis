@@ -1,0 +1,302 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Lab4_alotaibi</title><meta name="generator" content="MATLAB 9.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-11-13"><meta name="DC.source" content="Lab4_alotaibi.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Problem 1</a></li><li><a href="#3">Problem 2</a></li><li><a href="#4">Problem 3</a></li></ul></div><pre class="codeinput">clear
+clc
+</pre><h2 id="2">Problem 1</h2><pre class="codeinput">tol=1e-6;
+max_its=100;
+fcn=<span class="string">'x^5-3*x^4+4*x^3-4*x^2+3*x -1'</span>;
+fcn=<span class="string">'-1 + x*(3+x*(-4+x*(4+x*(-3+x))))'</span>;
+trueroot=1;
+intervals=[0, 3; 0.5, 2.0; 0.9, 1.2];
+
+disp(sprintf(<span class="string">'\nBisection estimate for root of %s with accuracy of %g:'</span>,fcn,tol));
+disp(sprintf(<span class="string">'_interval_ \t _estimate_ \t _error_ \t _iterations_'</span>))
+
+<span class="keyword">for</span> i=1:size(intervals,1),
+  [itiB(i),rootiB(i)]=bisect(fcn,intervals(i,1),intervals(i,2),tol,max_its);
+  disp(sprintf(<span class="string">'[%g,%g]    \t %0.8f \t %0.5e \t %d'</span>,<span class="keyword">...</span>
+	       intervals(i,:),rootiB(i),abs(trueroot-rootiB(i)),itiB(i)));
+<span class="keyword">end</span>
+<span class="comment">% a. because the number of iteration depends on the interval and the error</span>
+<span class="comment">% accuarcy</span>
+
+<span class="comment">% b. Because this function is an ill-conditioned (unstable rootfinding</span>
+<span class="comment">% problem) which leads to large errors in results for small errors in</span>
+<span class="comment">% inputs.</span>
+
+<span class="comment">% c. No, as the function is an ill-conditioned (unstable rootfinding</span>
+<span class="comment">% porblem) and I have tested it by rewriting the function again in</span>
+<span class="comment">% reveresed order, and nested form, and factoring it</span>
+<span class="comment">% tol=1e-6;</span>
+<span class="comment">% max_its=100;</span>
+<span class="comment">% fcn='-1 + x*(3+x*(-4+x*(4+x*(-3+x))))';</span>
+<span class="comment">% trueroot=1;</span>
+<span class="comment">% intervals=[0, 3; 0.5, 2.0; 0.9, 1.2];</span>
+
+<span class="comment">% disp(sprintf('\nBisection estimate for root of %s with accuracy of %g:',fcn,tol));</span>
+<span class="comment">% disp(sprintf('_interval_ \t _estimate_ \t _error_ \t _iterations_'))</span>
+
+<span class="comment">% for i=1:size(intervals,1),</span>
+  <span class="comment">% [itiB(i),rootiB(i)]=bisect(fcn,intervals(i,1),intervals(i,2),tol,max_its);</span>
+  <span class="comment">% disp(sprintf('[%g,%g]    \t %0.8f \t %0.5e \t %d',...</span>
+	       <span class="comment">% intervals(i,:),rootiB(i),abs(trueroot-rootiB(i)),itiB(i)));</span>
+<span class="comment">% end</span>
+</pre><pre class="codeoutput">
+Bisection estimate for root of -1 + x*(3+x*(-4+x*(4+x*(-3+x)))) with accuracy of 1e-06:
+_interval_ 	 _estimate_ 	 _error_ 	 _iterations_
+[0,3]    	 1.00000548 	 5.48363e-06 	 21
+[0.5,2]    	 1.00000453 	 4.52995e-06 	 20
+[0.9,1.2]    	 0.99999790 	 2.09808e-06 	 18
+</pre><h2 id="3">Problem 2</h2><pre class="codeinput">tol=1e-6;
+max_its=100;
+fcn=<span class="string">'x^5-3*x^4+4*x^3-4*x^2+3*x -1'</span>;
+trueroot=1;
+dfcn=<span class="string">'5*x^4-12*x^3+12*x^2-8*x+3'</span>;
+inits=[-100; 0; 0.9;0.99;1.1;1.4;1000000];
+
+disp(sprintf(<span class="string">'\nNewtons estimate for root of %s with accuracy of %g'</span>,fcn,tol));
+disp(sprintf(<span class="string">'_initial_ \t _estimate_ \t _error_ \t _iterations_'</span>))
+<span class="keyword">for</span> i=1:length(inits),
+
+  [itiN(i),rootiN(i)]=newton(fcn,dfcn,inits(i),tol,max_its);
+  disp(sprintf(<span class="string">'%g\t\t %0.8f \t %0.5e \t %d'</span>,<span class="keyword">...</span>
+	       inits(i),rootiN(i),abs(trueroot-rootiN(i)),itiN(i)));
+<span class="keyword">end</span>
+<span class="comment">% a. Newton's method is less efficient compared to Bisection's method when</span>
+<span class="comment">% the initial iterate is close to the true root as the Bisection's method's</span>
+<span class="comment">% iterations depend on the interval only compared to Newton's method's</span>
+<span class="comment">% iterations which depends on the function and its derivative.</span>
+
+<span class="comment">% b. The function is in ill-condition (unstable function), so we need to</span>
+<span class="comment">% rewrite the new function would be g(x) = x - m f(x)/f'(x), as m is known</span>
+<span class="comment">% which is the multiplicity of the root, which is 3, so the g(x) = x -</span>
+<span class="comment">% ((x^5-3*x^4+4*x^3-4*x^2+3*x -1)/(5*x^4-12*x^3+12*x^2-8*x+3)).</span>
+
+<span class="comment">% tol=1e-6;</span>
+<span class="comment">% max_its=100;</span>
+<span class="comment">% fcn='x -((x^5-3*x^4+4*x^3-4*x^2+3*x -1)/(5*x^4-12*x^3+12*x^2-8*x+3))';</span>
+<span class="comment">% trueroot=1;</span>
+<span class="comment">% dfcn='(4*(x^2 + 1)*(5*x^2 -4*x +2))/(5*x^2 -2*x +3)^2';</span>
+<span class="comment">% inits=[-100; 0; 0.9;0.99;1.1;1.4;1000000];</span>
+
+<span class="comment">% disp(sprintf('\nNewtons estimate for root of %s with accuracy of %g',fcn,tol));</span>
+<span class="comment">% disp(sprintf('_initial_ \t _estimate_ \t _error_ \t _iterations_'))</span>
+<span class="comment">% for i=1:length(inits),</span>
+
+  <span class="comment">% [itiN(i),rootiN(i)]=newton(fcn,dfcn,inits(i),tol,max_its);</span>
+  <span class="comment">% disp(sprintf('%g\t\t %0.8f \t %0.5e \t %d',...</span>
+	<span class="comment">%        inits(i),rootiN(i),abs(trueroot-rootiN(i)),itiN(i)));</span>
+<span class="comment">% end</span>
+
+<span class="comment">% b. (con.) I didn't acheive the quadradic convergence.</span>
+</pre><pre class="codeoutput">
+Newtons estimate for root of x^5-3*x^4+4*x^3-4*x^2+3*x -1 with accuracy of 1e-06
+_initial_ 	 _estimate_ 	 _error_ 	 _iterations_
+-100		 1.00000110 	 1.09607e-06 	 53
+0		 0.99999628 	 3.72051e-06 	 31
+0.9		 0.99999630 	 3.70103e-06 	 31
+0.99		 0.99999731 	 2.69277e-06 	 24
+1.1		 1.00000677 	 6.77341e-06 	 25
+1.4		 1.00000821 	 8.21270e-06 	 30
+1e+06		 0.99999920 	 8.03039e-07 	 95
+</pre><h2 id="4">Problem 3</h2><pre class="codeinput">tol=1e-6;
+max_its=100;
+fcn=<span class="string">'x^5-3*x^4+4*x^3-4*x^2+3*x -1'</span>;
+trueroot=1;
+intervals=[0, 3; 0.5, 2.0; 0.9, 1.2];
+
+disp(sprintf(<span class="string">'\nSecant estimate for root of %s with accuracy of %g:'</span>,fcn,tol));
+disp(sprintf(<span class="string">'_interval_ \t _estimate_ \t _error_ \t _iterations_'</span>))
+
+<span class="keyword">for</span> i=1:size(intervals,1),
+  [itiS(i),rootiS(i)]=secant(fcn,intervals(i,1),intervals(i,2),tol,max_its);
+  disp(sprintf(<span class="string">'[%g,%g]    \t %0.8f \t %0.5e \t %d'</span>,<span class="keyword">...</span>
+	       intervals(i,:),rootiS(i),abs(trueroot-rootiS(i)),itiS(i)));
+<span class="keyword">end</span>
+<span class="comment">% a. Secant's method is less efficient compared to Newton's and Bisection's</span>
+<span class="comment">% methodas it takes as it takes more iterations than both of them with</span>
+<span class="comment">% similar range of error.</span>
+
+<span class="comment">% b. No</span>
+</pre><pre class="codeoutput">
+Secant estimate for root of x^5-3*x^4+4*x^3-4*x^2+3*x -1 with accuracy of 1e-06:
+_interval_ 	 _estimate_ 	 _error_ 	 _iterations_
+[0,3]    	 0.99999539 	 4.60698e-06 	 45
+[0.5,2]    	 0.99999305 	 6.94623e-06 	 41
+[0.9,1.2]    	 0.99999530 	 4.69714e-06 	 38
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2017b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clear
+clc
+%% Problem 1
+tol=1e-6;
+max_its=100;
+fcn='x^5-3*x^4+4*x^3-4*x^2+3*x -1';
+fcn='-1 + x*(3+x*(-4+x*(4+x*(-3+x))))';
+trueroot=1;
+intervals=[0, 3; 0.5, 2.0; 0.9, 1.2];
+
+disp(sprintf('\nBisection estimate for root of %s with accuracy of %g:',fcn,tol));
+disp(sprintf('_interval_ \t _estimate_ \t _error_ \t _iterations_'))
+
+for i=1:size(intervals,1),
+  [itiB(i),rootiB(i)]=bisect(fcn,intervals(i,1),intervals(i,2),tol,max_its);
+  disp(sprintf('[%g,%g]    \t %0.8f \t %0.5e \t %d',...
+	       intervals(i,:),rootiB(i),abs(trueroot-rootiB(i)),itiB(i)));
+end
+% a. because the number of iteration depends on the interval and the error
+% accuarcy
+
+% b. Because this function is an ill-conditioned (unstable rootfinding
+% problem) which leads to large errors in results for small errors in
+% inputs.
+
+% c. No, as the function is an ill-conditioned (unstable rootfinding
+% porblem) and I have tested it by rewriting the function again in
+% reveresed order, and nested form, and factoring it
+% tol=1e-6;
+% max_its=100;
+% fcn='-1 + x*(3+x*(-4+x*(4+x*(-3+x))))';
+% trueroot=1;
+% intervals=[0, 3; 0.5, 2.0; 0.9, 1.2];
+
+% disp(sprintf('\nBisection estimate for root of %s with accuracy of %g:',fcn,tol));
+% disp(sprintf('_interval_ \t _estimate_ \t _error_ \t _iterations_'))
+
+% for i=1:size(intervals,1),
+  % [itiB(i),rootiB(i)]=bisect(fcn,intervals(i,1),intervals(i,2),tol,max_its);
+  % disp(sprintf('[%g,%g]    \t %0.8f \t %0.5e \t %d',...
+	       % intervals(i,:),rootiB(i),abs(trueroot-rootiB(i)),itiB(i)));
+% end
+%% Problem 2
+tol=1e-6;
+max_its=100;
+fcn='x^5-3*x^4+4*x^3-4*x^2+3*x -1';
+trueroot=1;
+dfcn='5*x^4-12*x^3+12*x^2-8*x+3';
+inits=[-100; 0; 0.9;0.99;1.1;1.4;1000000];
+
+disp(sprintf('\nNewtons estimate for root of %s with accuracy of %g',fcn,tol));
+disp(sprintf('_initial_ \t _estimate_ \t _error_ \t _iterations_'))
+for i=1:length(inits),
+
+  [itiN(i),rootiN(i)]=newton(fcn,dfcn,inits(i),tol,max_its);
+  disp(sprintf('%g\t\t %0.8f \t %0.5e \t %d',...
+	       inits(i),rootiN(i),abs(trueroot-rootiN(i)),itiN(i)));
+end
+% a. Newton's method is less efficient compared to Bisection's method when
+% the initial iterate is close to the true root as the Bisection's method's
+% iterations depend on the interval only compared to Newton's method's
+% iterations which depends on the function and its derivative.
+
+% b. The function is in ill-condition (unstable function), so we need to
+% rewrite the new function would be g(x) = x - m f(x)/f'(x), as m is known
+% which is the multiplicity of the root, which is 3, so the g(x) = x -
+% ((x^5-3*x^4+4*x^3-4*x^2+3*x -1)/(5*x^4-12*x^3+12*x^2-8*x+3)).
+
+% tol=1e-6;
+% max_its=100;
+% fcn='x -((x^5-3*x^4+4*x^3-4*x^2+3*x -1)/(5*x^4-12*x^3+12*x^2-8*x+3))';
+% trueroot=1;
+% dfcn='(4*(x^2 + 1)*(5*x^2 -4*x +2))/(5*x^2 -2*x +3)^2';
+% inits=[-100; 0; 0.9;0.99;1.1;1.4;1000000];
+
+% disp(sprintf('\nNewtons estimate for root of %s with accuracy of %g',fcn,tol));
+% disp(sprintf('_initial_ \t _estimate_ \t _error_ \t _iterations_'))
+% for i=1:length(inits),
+
+  % [itiN(i),rootiN(i)]=newton(fcn,dfcn,inits(i),tol,max_its);
+  % disp(sprintf('%g\t\t %0.8f \t %0.5e \t %d',...
+	%        inits(i),rootiN(i),abs(trueroot-rootiN(i)),itiN(i)));
+% end
+
+% b. (con.) I didn't acheive the quadradic convergence.
+%% Problem 3
+tol=1e-6;
+max_its=100;
+fcn='x^5-3*x^4+4*x^3-4*x^2+3*x -1';
+trueroot=1;
+intervals=[0, 3; 0.5, 2.0; 0.9, 1.2];
+
+disp(sprintf('\nSecant estimate for root of %s with accuracy of %g:',fcn,tol));
+disp(sprintf('_interval_ \t _estimate_ \t _error_ \t _iterations_'))
+
+for i=1:size(intervals,1),
+  [itiS(i),rootiS(i)]=secant(fcn,intervals(i,1),intervals(i,2),tol,max_its);
+  disp(sprintf('[%g,%g]    \t %0.8f \t %0.5e \t %d',...
+	       intervals(i,:),rootiS(i),abs(trueroot-rootiS(i)),itiS(i)));
+end
+% a. Secant's method is less efficient compared to Newton's and Bisection's
+% methodas it takes as it takes more iterations than both of them with
+% similar range of error.
+
+% b. No
+
+##### SOURCE END #####
+--></body></html>
